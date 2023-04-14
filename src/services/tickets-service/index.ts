@@ -5,7 +5,7 @@ import ticketsRepository from '@/repositories/tickets-repository';
 
 async function getTicketTypes(): Promise<TicketType[]> {
   const result = await ticketsRepository.getTicketTypes();
-  if (!result) throw notFoundError;
+  if (!result) throw notFoundError();
 
   return result;
 }
@@ -14,13 +14,24 @@ async function getTickets(userId: number): Promise<Ticket> {
   const enrollment = await enrollmentRepository.findEnrollment(userId);
   const result = await ticketsRepository.getTickets(enrollment.id);
 
-  if (!result) throw notFoundError;
+  if (!result) throw notFoundError();
+  return result;
+}
+
+async function createNewTicket(userId: number, ticketTypeId: number): Promise<Ticket> {
+  const enrollment = await enrollmentRepository.findEnrollment(userId);
+  if (!enrollment) throw notFoundError();
+
+  const result = await ticketsRepository.createNewTicket(enrollment.id, ticketTypeId);
+  if (!result) throw notFoundError();
+
   return result;
 }
 
 const ticketsService = {
   getTicketTypes,
   getTickets,
+  createNewTicket,
 };
 
 export default ticketsService;
