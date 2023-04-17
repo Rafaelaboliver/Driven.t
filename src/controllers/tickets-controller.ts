@@ -10,7 +10,7 @@ export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
 
     return res.send(ticket).status(httpStatus.OK);
   } catch (error) {
-    return res.status(httpStatus.NO_CONTENT);
+    return res.status(httpStatus.NO_CONTENT).send(error);
   }
 }
 
@@ -21,7 +21,7 @@ export async function getTickets(req: AuthenticatedRequest, res: Response) {
 
     return res.send(tickets).status(httpStatus.OK);
   } catch (error) {
-    res.send(httpStatus.NOT_FOUND);
+    res.send(httpStatus.NOT_FOUND).send(error);
   }
 }
 
