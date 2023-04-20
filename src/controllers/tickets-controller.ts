@@ -21,7 +21,7 @@ export async function getTickets(req: AuthenticatedRequest, res: Response) {
 
     return res.send(tickets).status(httpStatus.OK);
   } catch (error) {
-    res.send(httpStatus.NOT_FOUND).send(error);
+    res.status(httpStatus.NOT_FOUND).send(error);
   }
 }
 
