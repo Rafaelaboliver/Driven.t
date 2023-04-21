@@ -10,14 +10,14 @@ export async function enrollmentTicketVerification(userId: number) {
   const ticket = await ticketsRepository.getTickets(enrollment.id);
 
   if (!ticket) throw notFoundError();
-  if (ticket.status !== 'PAID' || !ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
+  if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
     throw paymentRequired();
 }
 
 export async function getHotels(userId: number) {
   await enrollmentTicketVerification(userId);
   const result = await hotelsRepository.getHotels();
-  if (!result) throw notFoundError;
+  if (!result.length) throw notFoundError();
 
   return result;
 }
@@ -26,6 +26,7 @@ export async function getHotelById(hotelId: number, userId: number) {
   await enrollmentTicketVerification(userId);
 
   const result = await hotelsRepository.getHotelById(hotelId);
+  if (!result) throw notFoundError();
   return result;
 }
 
