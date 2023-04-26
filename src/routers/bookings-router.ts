@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import { createBooking } from '@/controllers';
 
 const bookingsRouter = Router();
 
-bookingsRouter.post('/');
+bookingsRouter.post('/', createBooking);
 
 export { bookingsRouter };

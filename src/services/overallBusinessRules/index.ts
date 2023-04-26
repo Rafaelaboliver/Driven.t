@@ -1,0 +1,14 @@
+import { notFoundError, paymentRequired } from '@/errors';
+import enrollmentRepository from '@/repositories/enrollment-repository';
+import ticketsRepository from '@/repositories/tickets-repository';
+
+export async function enrollmentTicketVerification(userId: number) {
+  const enrollment = await enrollmentRepository.findEnrollmentByUserId(userId);
+  if (!enrollment) throw notFoundError();
+
+  const ticket = await ticketsRepository.getTickets(enrollment.id);
+
+  if (!ticket) throw notFoundError();
+  if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
+    throw paymentRequired();
+}
