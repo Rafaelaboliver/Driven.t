@@ -1,9 +1,9 @@
 import { enrollmentTicketVerification } from '../overallBusinessRules';
-import { notFoundError } from '@/errors';
+import { notFoundError, paymentRequired } from '@/errors';
 import hotelsRepository from '@/repositories/hotels-repository';
 
 export async function getHotels(userId: number) {
-  await enrollmentTicketVerification(userId);
+  await enrollmentTicketVerification(userId, paymentRequired());
   const result = await hotelsRepository.getHotels();
   if (!result.length) throw notFoundError();
 
@@ -11,7 +11,7 @@ export async function getHotels(userId: number) {
 }
 
 export async function getHotelById(hotelId: number, userId: number) {
-  await enrollmentTicketVerification(userId);
+  await enrollmentTicketVerification(userId, paymentRequired());
 
   const result = await hotelsRepository.getHotelById(hotelId);
   if (!result) throw notFoundError();
