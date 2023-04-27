@@ -24,9 +24,22 @@ export async function getBookingByUserId(req: AuthenticatedRequest, res: Respons
     const booking = await bookingsService.getBookingByUserId(userId);
     const result = {
       id: booking.id,
-      room: booking.Room,
+      Room: booking.Room,
     };
     return res.send(result).status(httpStatus.OK);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { bookingId } = req.params as { bookingId: string };
+  const { roomId } = req.body as { roomId: number };
+  const { userId } = req;
+  try {
+    const booking = await bookingsService.updateBooking(parseInt(bookingId), roomId, userId);
+
+    return res.send(booking).status(httpStatus.OK);
   } catch (error) {
     next(error);
   }

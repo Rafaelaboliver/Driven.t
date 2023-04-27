@@ -1,5 +1,5 @@
 import { enrollmentTicketVerification } from '../overallBusinessRules';
-import { forbiddenError, notFoundError, paymentRequired } from '@/errors';
+import { forbiddenError, notFoundError } from '@/errors';
 import bookingsRepository from '@/repositories/bookings-repository';
 import hotelsRepository from '@/repositories/hotels-repository';
 
@@ -23,9 +23,19 @@ async function getBookingByUserId(userId: number) {
   return booking;
 }
 
+async function updateBooking(bookingId: number, roomId: number, userId: number) {
+  await enrollmentTicketVerification(userId, forbiddenError());
+
+  const booking = await bookingsRepository.updateBooking(bookingId, roomId, userId);
+  if (!booking) throw notFoundError;
+
+  return booking;
+}
+
 const bookingsService = {
   createBooking,
   getBookingByUserId,
+  updateBooking,
 };
 
 export default bookingsService;
