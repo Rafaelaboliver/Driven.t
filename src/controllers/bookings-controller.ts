@@ -9,8 +9,9 @@ export async function createBooking(req: AuthenticatedRequest, res: Response, ne
   const { id: roomId } = req.body as Pick<Room, 'id'>;
   try {
     const booking = await bookingsService.createBooking(userId, roomId);
+    const bookingId = booking.id;
 
-    return res.send(booking.id).status(httpStatus.OK);
+    return res.send({ bookingId }).status(httpStatus.OK);
   } catch (error) {
     next(error);
   }
