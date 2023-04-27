@@ -9,8 +9,20 @@ async function createBooking(userId: number, roomId: number) {
   });
 }
 
+async function getBookingByUserId(userId: number) {
+  return prisma.booking.findFirst({
+    where: {
+      userId,
+    },
+    include: {
+      Room: true,
+    },
+  });
+}
+
 const bookingsRepository = {
   createBooking,
+  getBookingByUserId,
 };
 
 export default bookingsRepository;

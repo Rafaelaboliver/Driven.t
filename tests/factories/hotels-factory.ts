@@ -20,3 +20,13 @@ export async function createRoom(hotelId: number): Promise<Room> {
     },
   });
 }
+
+export async function createCapacityRoom(hotelId: number, capacity: number): Promise<Room> {
+  return prisma.room.create({
+    data: {
+      name: faker.name.findName(),
+      capacity,
+      hotelId,
+    },
+  });
+}
