@@ -39,7 +39,7 @@ export async function updateBooking(req: AuthenticatedRequest, res: Response, ne
   try {
     const booking = await bookingsService.updateBooking(parseInt(bookingId), roomId, userId);
 
-    return res.send(booking).status(httpStatus.OK);
+    return res.send({ bookingId: booking }).status(httpStatus.OK);
   } catch (error) {
     next(error);
   }

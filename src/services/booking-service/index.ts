@@ -25,6 +25,8 @@ async function getBookingByUserId(userId: number) {
 
 async function updateBooking(bookingId: number, roomId: number, userId: number) {
   await enrollmentTicketVerification(userId, forbiddenError());
+  const hotelRoom = await hotelsRepository.getHotelRoom(roomId);
+  if (hotelRoom.capacity <= hotelRoom.Booking.length) throw forbiddenError();
   const check = await bookingsRepository.checkBookingWithIdAndUserId(bookingId, userId);
   if (!check) throw forbiddenError();
 
