@@ -22,8 +22,11 @@ export async function getBookingByUserId(req: AuthenticatedRequest, res: Respons
 
   try {
     const booking = await bookingsService.getBookingByUserId(userId);
-
-    return booking;
+    const result = {
+      id: booking.id,
+      room: booking.Room,
+    };
+    return res.send(result).status(httpStatus.OK);
   } catch (error) {
     next(error);
   }

@@ -16,7 +16,7 @@ async function createBooking(userId: number, roomId: number) {
 }
 
 async function getBookingByUserId(userId: number) {
-  await enrollmentTicketVerification(userId, paymentRequired());
+  await enrollmentTicketVerification(userId, forbiddenError());
   const booking = await bookingsRepository.getBookingByUserId(userId);
   if (!booking) throw notFoundError();
 
