@@ -10,6 +10,7 @@ import {
   createTicket,
   createTicketType,
   createTicketTypeIncludesHotelFalse,
+  createTicketTypeIncludesHotelTrue,
   createTicketTypeRemote,
   createUser,
 } from '../factories';
@@ -117,16 +118,20 @@ describe('when token is valid', () => {
   //   expect(response.status).toBe(httpStatus.NOT_FOUND);
   // });
 
-  // it('should respond with status 403 if there is no vacancy in the room', async () => {
-  //   const user = await createUser();
-  //   const token = await generateValidToken(user);
-  //   const enrollment = await createEnrollmentWithAddress(user);
-  //   const ticketType = await createTicketTypeIncludesHotelTrue();
-  //   await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-  //   await createHotel();
+  it('should respond with status 404 when roomId is not found', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createTicketTypeIncludesHotelTrue();
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    const hotel = await createHotel();
+    const room = await createRoom(hotel.id);
 
-  //   const response = await server.post('/booking').send({ roomId: 13 }).set('Authorization', `Bearer ${token}`);
+    const response = await server
+      .post(`/booking`)
+      .send({ roomId: room.id + 2 })
+      .set('Authorization', `Bearer ${token}`);
 
-  //   expect(response.status).toBe(httpStatus.FORBIDDEN);
-  // });
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+  });
 });
