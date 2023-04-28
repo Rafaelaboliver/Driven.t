@@ -5,6 +5,7 @@ import hotelsRepository from '@/repositories/hotels-repository';
 
 async function createBooking(userId: number, roomId: number) {
   await enrollmentTicketVerification(userId, forbiddenError());
+
   const hotelRoom = await hotelsRepository.getHotelRoom(roomId);
   if (!hotelRoom) throw notFoundError();
   if (hotelRoom.capacity <= hotelRoom.Booking.length) throw forbiddenError();
@@ -17,6 +18,7 @@ async function createBooking(userId: number, roomId: number) {
 
 async function getBookingByUserId(userId: number) {
   await enrollmentTicketVerification(userId, forbiddenError());
+
   const booking = await bookingsRepository.getBookingByUserId(userId);
   if (!booking) throw notFoundError();
 
@@ -25,13 +27,16 @@ async function getBookingByUserId(userId: number) {
 
 async function updateBooking(bookingId: number, roomId: number, userId: number) {
   await enrollmentTicketVerification(userId, forbiddenError());
-  const hotelRoom = await hotelsRepository.getHotelRoom(roomId);
-  if (hotelRoom.capacity <= hotelRoom.Booking.length) throw forbiddenError();
-  const check = await bookingsRepository.checkBookingWithIdAndUserId(bookingId, userId);
-  if (!check) throw forbiddenError();
 
-  const booking = await bookingsRepository.updateBooking(bookingId, roomId, userId);
-  return booking;
+  const hotelRoom = await hotelsRepository.getHotelRoom(roomId);
+  if (!hotelRoom) throw notFoundError();
+  if (hotelRoom.capacity <= hotelRoom.Booking.length) throw forbiddenError();
+
+  const booking = await bookingsRepository.checkBookingWithIdAndUserId(bookingId, userId);
+  if (!booking) throw forbiddenError();
+
+  const result = await bookingsRepository.updateBooking(bookingId, roomId, userId);
+  return result;
 }
 
 const bookingsService = {

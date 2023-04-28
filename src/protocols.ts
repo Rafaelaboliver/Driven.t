@@ -70,3 +70,7 @@ export type PaymentProcess = {
   ticketId: number;
   cardData: CardData;
 };
+
+export type BookingId = {
+  bookingId: number;
+};
